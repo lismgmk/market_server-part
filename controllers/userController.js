@@ -32,7 +32,7 @@ class UserController {
 
         const {email, password} = req.body
         const user = await User.findOne({where: {email}})
-        if (user) {
+        if (!user) {
             return next(ApiError.internal('Пользователь не найден'))
         }
 
@@ -45,12 +45,8 @@ class UserController {
     }
 
     async check(req, res, next) {
-        const {id} = req.query //параметры с адресной строки
-        if (!id) {
-            return next(ApiError.badRequest('Не задан ID'))
-        }
-
-        res.json(id)
+const token = generateJwt(req.userId.id, req.user.email, req.user.role)
+return res.json({token})
     }
 }
 
